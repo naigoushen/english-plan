@@ -40,7 +40,10 @@
     <section class="panel">
       <div class="panel-head">
         <h2 class="panel-title">今天的课</h2>
-        <span class="panel-meta" id="courseMeta"></span>
+        <div class="head-right">
+          <span class="panel-meta" id="courseMeta"></span>
+          <button type="button" class="link-btn" id="courseToTimetable">看整周 ›</button>
+        </div>
       </div>
       <ul class="course-list" id="courseList"></ul>
     </section>
@@ -102,7 +105,12 @@
     <section class="panel">
       <div class="panel-head">
         <h2 class="panel-title">每周课表</h2>
-        <span class="panel-meta" id="timetableMeta"></span>
+        <button type="button" class="link-btn" id="ttBack" hidden>回到本周</button>
+      </div>
+      <div class="week-nav">
+        <button type="button" class="nav-arrow" id="ttPrev" aria-label="上一周">‹</button>
+        <span class="week-label" id="ttLabel"></span>
+        <button type="button" class="nav-arrow" id="ttNext" aria-label="下一周">›</button>
       </div>
       <div id="timetable"></div>
     </section>

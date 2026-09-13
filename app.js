@@ -61,31 +61,54 @@
   };
 
   var COURSES = {
-    1: [['第 5-6 节', '大学外语I', '2216']],
-    2: [['第 1-4 节', 'Python 程序设计', '3509 通用计算机实训室'], ['第 5-8 节', '高等数学I', '5-0308']],
+    1: [[5, 6, '大学外语I', '2216']],
+    2: [[1, 4, 'Python 程序设计', '3509 通用计算机实训室'], [5, 8, '高等数学I', '5-0308']],
     3: [
-      ['第 1-2 节', '电工电子技术基础', '3710 数字媒体实训室'],
-      ['第 3-4 节', '大学外语口语', '4102'],
-      ['第 9-10 节', '大学外语I', '2216']
+      [1, 2, '电工电子技术基础', '3710 数字媒体实训室'],
+      [3, 4, '大学外语口语', '4102'],
+      [9, 10, '大学外语I', '2216']
     ],
     4: [
-      ['第 1-3 节', '艺术学概论', '4313'],
-      ['第 5-6 节', '思想道德与法治', '5-0506'],
-      ['第 7-8 节', '体育I', '图书馆旁篮球场']
+      [1, 3, '艺术学概论', '4313'],
+      [5, 6, '思想道德与法治', '5-0506'],
+      [7, 8, '体育I', '图书馆旁篮球场']
     ],
     5: [
-      ['第 1-2 节', '思想道德与法治', '5-0506'],
-      ['第 3-4 节', '电工电子技术基础', '3307 通用计算机实训室'],
-      ['第 5-8 节', '高等数学I', '5-0308']
+      [1, 2, '思想道德与法治', '5-0506'],
+      [3, 4, '电工电子技术基础', '3307 通用计算机实训室'],
+      [5, 8, '高等数学I', '5-0308']
     ],
     6: [],
     0: []
   };
 
+  // 每个小节的起止时间，来自学校作息时间表（第 4 节按第一、第五教学楼计）
+  var PERIOD_RANGE = [
+    ['08:20', '09:05'],
+    ['09:10', '09:55'],
+    ['10:15', '11:00'],
+    ['11:10', '11:55'],
+    ['14:20', '15:05'],
+    ['15:10', '15:55'],
+    ['16:10', '16:55'],
+    ['17:00', '17:45'],
+    ['19:00', '19:45'],
+    ['19:50', '20:35'],
+    ['20:40', '21:25']
+  ];
+
   var PERIOD_TIMES = [
-    ['上午', '第 1-4 节　08:20 / 09:10 / 10:15 / 11:10'],
-    ['下午', '第 5-8 节　14:20 / 15:10 / 16:10 / 17:00'],
-    ['晚上', '第 9-11 节　19:00 / 19:50 / 20:40']
+    ['上午', '第 1 节', '08:20 - 09:05'],
+    ['', '第 2 节', '09:10 - 09:55'],
+    ['', '第 3 节', '10:15 - 11:00'],
+    ['', '第 4 节', '11:10 - 11:55'],
+    ['下午', '第 5 节', '14:20 - 15:05'],
+    ['', '第 6 节', '15:10 - 15:55'],
+    ['', '第 7 节', '16:10 - 16:55'],
+    ['', '第 8 节', '17:00 - 17:45'],
+    ['晚上', '第 9 节', '19:00 - 19:45'],
+    ['', '第 10 节', '19:50 - 20:35'],
+    ['', '第 11 节', '20:40 - 21:25']
   ];
 
   var HOLIDAYS = [
@@ -207,7 +230,10 @@
     courseMeta: $('#courseMeta'),
     courseList: $('#courseList'),
     taskList: $('#taskList'),
-    timetableMeta: $('#timetableMeta'),
+    ttLabel: $('#ttLabel'),
+    ttPrev: $('#ttPrev'),
+    ttNext: $('#ttNext'),
+    ttBack: $('#ttBack'),
     timetable: $('#timetable'),
     periodTimes: $('#periodTimes'),
     todayMorningMeta: $('#todayMorningMeta'),
@@ -245,6 +271,7 @@
   var currentView = 'today';
   var gridMode = 'week';
   var gridWeek = Math.min(Math.max(weekOf(todayKey()), CHECKIN_WEEKS[0]), CHECKIN_WEEKS[1]);
+  var ttWeek = Math.min(Math.max(weekOf(todayKey()), CHECKIN_WEEKS[0]), CHECKIN_WEEKS[1]);
 
   /* ------------------------------------------------------------------ *
    * 打卡状态
@@ -392,35 +419,81 @@
       dom.courseList.appendChild(el('li', 'empty-line', note ? note.text : '今天没有课。'));
       return;
     }
-    list.forEach(function (c) {
-      var li = el('li', 'course-item');
-      li.appendChild(el('span', 'course-slot', c[0]));
-      var name = el('span', 'course-name');
-      name.appendChild(el('span', 'course-title', c[1]));
-      if (c[2]) name.appendChild(el('span', 'course-room', c[2]));
-      li.appendChild(name);
-      dom.courseList.appendChild(li);
-    });
+    list.forEach(function (c) { dom.courseList.appendChild(courseItem(c)); });
+  }
+
+  function slotLabel(from, to) {
+    return from === to ? '第 ' + from + ' 节' : '第 ' + from + '-' + to + ' 节';
+  }
+
+  function slotTime(from, to) {
+    return PERIOD_RANGE[from - 1][0] + ' - ' + PERIOD_RANGE[to - 1][1];
+  }
+
+  function courseItem(c) {
+    var li = el('li', 'course-item');
+    var slot = el('span', 'course-slot');
+    slot.appendChild(el('span', 'course-slot-label', slotLabel(c[0], c[1])));
+    slot.appendChild(el('span', 'course-time', slotTime(c[0], c[1])));
+    li.appendChild(slot);
+    var name = el('span', 'course-name');
+    name.appendChild(el('span', 'course-title', c[2]));
+    if (c[3]) name.appendChild(el('span', 'course-room', c[3]));
+    li.appendChild(name);
+    return li;
   }
 
   /* ------------------------------------------------------------------ *
    * 课表
    * ------------------------------------------------------------------ */
-  function renderTimetable() {
-    var today = todayKey();
-    var todayWd = weekdayOf(today);
-    var highlight = today >= TERM_START && today <= EXAM_END;
+  function renderPeriodTimes() {
+    dom.periodTimes.textContent = '';
+    PERIOD_TIMES.forEach(function (p) {
+      var li = el('li', 'period-item');
+      li.appendChild(el('span', 'period-label', p[0]));
+      li.appendChild(el('span', 'period-slot', p[1]));
+      li.appendChild(el('span', 'period-time', p[2]));
+      dom.periodTimes.appendChild(li);
+    });
+    dom.periodTimes.appendChild(
+      el('li', 'period-note', '第 4 节在非第一、第五教学楼的场地是 11:00 - 11:45。')
+    );
+  }
 
-    dom.timetableMeta.textContent = '按第 3 周教务系统';
+  function weekNotice(w) {
+    var military = [weekOf(MILITARY[0]), weekOf(MILITARY[1])];
+    if (w >= military[0] && w <= military[1]) return '这一周是军训，没有常规课程。';
+    if (w === weekOf(EXAM_START)) return '这是第 19 周统考周，没有常规课程。';
+    return null;
+  }
+
+  function renderTimetable() {
+    var nowWeek = weekOf(todayKey());
+    var monday = mondayOfWeek(ttWeek);
+    var isCurrent = ttWeek === nowWeek;
+
+    dom.ttLabel.textContent = '第 ' + ttWeek + ' 周 · ' + weekRangeText(ttWeek);
+    dom.ttPrev.disabled = ttWeek <= CHECKIN_WEEKS[0];
+    dom.ttNext.disabled = ttWeek >= CHECKIN_WEEKS[1];
+    dom.ttBack.hidden = isCurrent;
     dom.timetable.textContent = '';
 
+    var notice = weekNotice(ttWeek);
+    if (notice) {
+      dom.timetable.appendChild(el('p', 'tt-week-note', notice));
+      renderPeriodTimes();
+      return;
+    }
+
     [1, 2, 3, 4, 5, 6, 0].forEach(function (wd) {
+      var dateKey = addDays(monday, wd === 0 ? 6 : wd - 1);
       var list = COURSES[wd] || [];
-      var isToday = highlight && wd === todayWd;
+      var isToday = isCurrent && dateKey === todayKey();
       var day = el('div', 'tt-day' + (isToday ? ' is-today' : ''));
 
       var head = el('div', 'tt-day-head');
       head.appendChild(el('span', 'tt-day-name', wd === 0 ? '周日' : '周' + WEEKDAY_CN[wd]));
+      head.appendChild(el('span', 'tt-day-date', monthDay(dateKey)));
       if (isToday) head.appendChild(el('span', 'tt-day-tag', '今天'));
       day.appendChild(head);
 
@@ -428,27 +501,13 @@
         day.appendChild(el('p', 'tt-day-rest', '没课'));
       } else {
         var ul = el('ul', 'course-list');
-        list.forEach(function (c) {
-          var li = el('li', 'course-item');
-          li.appendChild(el('span', 'course-slot', c[0]));
-          var name = el('span', 'course-name');
-          name.appendChild(el('span', 'course-title', c[1]));
-          if (c[2]) name.appendChild(el('span', 'course-room', c[2]));
-          li.appendChild(name);
-          ul.appendChild(li);
-        });
+        list.forEach(function (c) { ul.appendChild(courseItem(c)); });
         day.appendChild(ul);
       }
       dom.timetable.appendChild(day);
     });
 
-    dom.periodTimes.textContent = '';
-    PERIOD_TIMES.forEach(function (p) {
-      var li = el('li', 'period-item');
-      li.appendChild(el('span', 'period-label', p[0]));
-      li.appendChild(el('span', null, p[1]));
-      dom.periodTimes.appendChild(li);
-    });
+    renderPeriodTimes();
   }
 
   function renderTasks(status, wd) {
@@ -801,6 +860,21 @@
 
   $('#backupOpen').addEventListener('click', openSheet);
   $('#backupOpenFoot').addEventListener('click', openSheet);
+  $('#courseToTimetable').addEventListener('click', function () {
+    ttWeek = Math.min(Math.max(weekOf(todayKey()), CHECKIN_WEEKS[0]), CHECKIN_WEEKS[1]);
+    renderTimetable();
+    showView('timetable');
+  });
+  dom.ttPrev.addEventListener('click', function () {
+    if (ttWeek > CHECKIN_WEEKS[0]) { ttWeek--; renderTimetable(); }
+  });
+  dom.ttNext.addEventListener('click', function () {
+    if (ttWeek < CHECKIN_WEEKS[1]) { ttWeek++; renderTimetable(); }
+  });
+  dom.ttBack.addEventListener('click', function () {
+    ttWeek = Math.min(Math.max(weekOf(todayKey()), CHECKIN_WEEKS[0]), CHECKIN_WEEKS[1]);
+    renderTimetable();
+  });
   dom.sheetClose.addEventListener('click', closeSheet);
   dom.sheetBackdrop.addEventListener('click', closeSheet);
   dom.exportBtn.addEventListener('click', exportBackup);
