@@ -80,8 +80,23 @@ button{font-family:inherit;}
 .course-item:last-child{border-bottom:0;padding-bottom:0;}
 .course-item:first-child{padding-top:0;}
 .course-slot{flex:none;width:74px;font-size:12.5px;color:var(--text-3);}
-.course-name{font-size:14.5px;}
+.course-name{min-width:0;}
+.course-title{display:block;font-size:14.5px;}
+.course-room{display:block;margin-top:1px;font-size:12px;color:var(--text-3);}
 .empty-line{margin:0;font-size:14px;color:var(--text-3);}
+
+/* ---------- timetable ---------- */
+.tt-day{padding:12px 0;border-top:1px solid var(--line);}
+.tt-day:first-child{border-top:0;padding-top:0;}
+.tt-day:last-child{padding-bottom:0;}
+.tt-day-head{display:flex;align-items:center;gap:9px;margin-bottom:9px;}
+.tt-day-name{font-size:13px;font-weight:600;color:var(--text-2);}
+.tt-day.is-today .tt-day-name{color:var(--amber);}
+.tt-day-tag{font-size:11px;line-height:1.6;color:var(--amber);border:1px solid var(--amber);border-radius:5px;padding:0 5px;}
+.tt-day-rest{margin:0;font-size:13px;color:var(--text-3);}
+.period-list{list-style:none;margin:0;padding:0;}
+.period-item{display:flex;gap:10px;padding:5px 0;font-size:12.5px;line-height:1.7;color:var(--text-2);}
+.period-label{flex:none;width:34px;color:var(--text-3);}
 
 .task-item{position:relative;padding:7px 0 7px 20px;font-size:14.5px;color:var(--text);}
 .task-item::before{content:"";position:absolute;left:2px;top:15px;width:5px;height:5px;border-radius:1px;background:var(--amber);opacity:.85;}

@@ -24,6 +24,7 @@
 
   <nav class="segmented" id="viewSwitch" role="tablist" aria-label="视图切换">
     <button type="button" class="seg-btn active" data-view="today" role="tab" aria-selected="true">今日</button>
+    <button type="button" class="seg-btn" data-view="timetable" role="tab" aria-selected="false">课表</button>
     <button type="button" class="seg-btn" data-view="checkin" role="tab" aria-selected="false">打卡</button>
     <button type="button" class="seg-btn" data-view="plan" role="tab" aria-selected="false">计划</button>
     <button type="button" class="seg-btn" data-view="stats" role="tab" aria-selected="false">统计</button>
@@ -53,7 +54,7 @@
 
     <section class="panel">
       <div class="panel-head">
-        <h2 class="panel-title">晨读打卡</h2>
+        <h2 class="panel-title">每日打卡</h2>
         <span class="panel-meta" id="todayMorningMeta"></span>
       </div>
       <button type="button" class="cta" id="todayMorningBtn" aria-pressed="false">
@@ -68,7 +69,7 @@
   <main id="viewCheckin" class="view" hidden>
     <section class="panel">
       <div class="panel-head">
-        <h2 class="panel-title">晨读打卡</h2>
+        <h2 class="panel-title">每日打卡</h2>
         <div class="mini-switch" id="gridMode" role="group" aria-label="打卡范围">
           <button type="button" class="mini-btn on" data-mode="week">本周</button>
           <button type="button" class="mini-btn" data-mode="all">全部</button>
@@ -97,6 +98,21 @@
     </section>
   </main>
 
+  <main id="viewTimetable" class="view" hidden>
+    <section class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">每周课表</h2>
+        <span class="panel-meta" id="timetableMeta"></span>
+      </div>
+      <div id="timetable"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2 class="panel-title">上课时间</h2></div>
+      <ul class="period-list" id="periodTimes"></ul>
+    </section>
+  </main>
+
   <main id="viewPlan" class="view" hidden>
     <section class="panel">
       <div class="panel-head">
@@ -119,7 +135,7 @@
 
   <main id="viewStats" class="view" hidden>
     <section class="panel">
-      <div class="panel-head"><h2 class="panel-title">晨读</h2></div>
+      <div class="panel-head"><h2 class="panel-title">打卡</h2></div>
       <div class="stat-grid" id="morningStats"></div>
       <div class="progress"><div class="progress-fill" id="statsMorningFill"></div></div>
     </section>

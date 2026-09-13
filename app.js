@@ -32,16 +32,16 @@
     { w: [7, 8], dates: '10/12 - 10/25', school: '正常上课', task: '基础语法补完' },
     { w: [9, 10], dates: '10/26 - 11/8', school: '11/6 - 11/7 校运会停课', task: '课本前 6 个单元过完第一遍' },
     { w: [11, 12], dates: '11/9 - 11/22', school: '正常上课', task: '老师讲过的单元全部复盘' },
-    { w: [13, 14], dates: '11/23 - 12/6', school: '军训', task: '只保留晨读，不设新任务' },
+    { w: [13, 14], dates: '11/23 - 12/6', school: '军训', task: '只保留每天的 30 分钟，不设新任务' },
     { w: [15, 16], dates: '12/7 - 12/20', school: '军训结束复课', task: '重做线上平台的单元练习' },
     { w: [17, 18], dates: '12/21 - 1/3', school: '老生统考，1/1 元旦', task: '每周一次限时上机模拟' },
     { w: [19, 19], dates: '1/4 - 1/10', school: '新生统考', task: '考试周' }
   ];
 
   var RULES = [
-    '晨读 07:30 - 08:00 不缺席。这半小时只做一件事：把当天要上的课文读出声。',
+    '每天 30 分钟，把课文读出声。时间自己定，但固定在同一个时段，不然很容易断。',
     '单元当天讲完当天过。不积压，积压的内容周末补，不允许拖过两周。',
-    '周二、周五两天全天满课，不额外加英语任务，只完成晨读，把力气留给高数。'
+    '周二、周五两天全天满课，不额外加英语任务，只完成当天的 30 分钟，把力气留给高数。'
   ];
 
   var TODOS = [
@@ -51,24 +51,42 @@
   ];
 
   var WEEK_PLAN = {
-    1: { classes: '上午全空，下午第 5-6 节有大学外语课', task: '晨读；上午整块时间精读课文；晚上清当天内容' },
-    2: { classes: 'Python 四节 + 高等数学四节', task: '只做晨读' },
-    3: { classes: '上午电工电子与口语课，晚上还有两节大学外语', task: '晨读；下午空档练视听说听力；晚上英语课当天清' },
-    4: { classes: '艺术学概论三节 + 思政两节 + 体育两节', task: '晨读；晚上背单词' },
-    5: { classes: '思政、电工电子、高等数学共八节', task: '只做晨读' },
+    1: { classes: '上午全空，下午第 5-6 节有大学外语课', task: '英语 30 分钟；上午整块时间精读课文；晚上清当天内容' },
+    2: { classes: 'Python 四节 + 高等数学四节', task: '只完成英语 30 分钟' },
+    3: { classes: '上午电工电子与口语课，晚上还有两节大学外语', task: '英语 30 分钟；下午空档练视听说听力；晚上英语课当天清' },
+    4: { classes: '艺术学概论三节 + 思政两节 + 体育两节', task: '英语 30 分钟；晚上背单词' },
+    5: { classes: '思政、电工电子、高等数学共八节', task: '只完成英语 30 分钟' },
     6: { classes: '无课', task: '一周复盘，1 到 1.5 小时' },
     0: { classes: '无课', task: '预习下周单元，补本周欠账' }
   };
 
   var COURSES = {
-    1: [['第 5-6 节', '大学外语I']],
-    2: [['第 1-4 节', 'Python 程序设计'], ['第 5-8 节', '高等数学I']],
-    3: [['第 1-2 节', '电工电子技术基础'], ['第 3-4 节', '大学外语口语'], ['第 9-10 节', '大学外语I']],
-    4: [['第 1-3 节', '艺术学概论'], ['第 5-6 节', '思想道德与法治'], ['第 7-8 节', '体育I']],
-    5: [['第 1-2 节', '思想道德与法治'], ['第 3-4 节', '电工电子技术基础'], ['第 5-8 节', '高等数学I']],
+    1: [['第 5-6 节', '大学外语I', '2216']],
+    2: [['第 1-4 节', 'Python 程序设计', '3509 通用计算机实训室'], ['第 5-8 节', '高等数学I', '5-0308']],
+    3: [
+      ['第 1-2 节', '电工电子技术基础', '3710 数字媒体实训室'],
+      ['第 3-4 节', '大学外语口语', '4102'],
+      ['第 9-10 节', '大学外语I', '2216']
+    ],
+    4: [
+      ['第 1-3 节', '艺术学概论', '4313'],
+      ['第 5-6 节', '思想道德与法治', '5-0506'],
+      ['第 7-8 节', '体育I', '图书馆旁篮球场']
+    ],
+    5: [
+      ['第 1-2 节', '思想道德与法治', '5-0506'],
+      ['第 3-4 节', '电工电子技术基础', '3307 通用计算机实训室'],
+      ['第 5-8 节', '高等数学I', '5-0308']
+    ],
     6: [],
     0: []
   };
+
+  var PERIOD_TIMES = [
+    ['上午', '第 1-4 节　08:20 / 09:10 / 10:15 / 11:10'],
+    ['下午', '第 5-8 节　14:20 / 15:10 / 16:10 / 17:00'],
+    ['晚上', '第 9-11 节　19:00 / 19:50 / 20:40']
+  ];
 
   var HOLIDAYS = [
     { from: '2026-10-01', to: '2026-10-07', text: '国庆假期，具体安排以学校通知为准' }
@@ -117,14 +135,15 @@
    * ------------------------------------------------------------------ */
   var storageOK = true;
 
-  function emptyData() { return { morning: {}, units: {} }; }
+  function emptyData() { return { daily: {}, units: {} }; }
 
   function sanitize(raw) {
     var out = emptyData();
     if (!raw || typeof raw !== 'object') return out;
-    if (raw.morning && typeof raw.morning === 'object') {
-      Object.keys(raw.morning).forEach(function (k) {
-        if (/^\d{4}-\d{2}-\d{2}$/.test(k) && raw.morning[k]) out.morning[k] = true;
+    var daily = raw.daily || raw.morning;
+    if (daily && typeof daily === 'object') {
+      Object.keys(daily).forEach(function (k) {
+        if (/^\d{4}-\d{2}-\d{2}$/.test(k) && daily[k]) out.daily[k] = true;
       });
     }
     if (raw.units && typeof raw.units === 'object') {
@@ -177,6 +196,7 @@
     switch: $('#viewSwitch'),
     views: {
       today: $('#viewToday'),
+      timetable: $('#viewTimetable'),
       checkin: $('#viewCheckin'),
       plan: $('#viewPlan'),
       stats: $('#viewStats')
@@ -187,6 +207,9 @@
     courseMeta: $('#courseMeta'),
     courseList: $('#courseList'),
     taskList: $('#taskList'),
+    timetableMeta: $('#timetableMeta'),
+    timetable: $('#timetable'),
+    periodTimes: $('#periodTimes'),
     todayMorningMeta: $('#todayMorningMeta'),
     todayMorningBtn: $('#todayMorningBtn'),
     todayMorningBtnText: $('#todayMorningBtnText'),
@@ -226,11 +249,11 @@
   /* ------------------------------------------------------------------ *
    * 打卡状态
    * ------------------------------------------------------------------ */
-  function isMorningDone(k) { return !!data.morning[k]; }
+  function isMorningDone(k) { return !!data.daily[k]; }
 
   function toggleMorning(k) {
-    if (data.morning[k]) delete data.morning[k];
-    else data.morning[k] = true;
+    if (data.daily[k]) delete data.daily[k];
+    else data.daily[k] = true;
     saveData();
     renderAll();
   }
@@ -267,7 +290,7 @@
 
   function checkedWorkdays() {
     var n = 0;
-    Object.keys(data.morning).forEach(function (k) {
+    Object.keys(data.daily).forEach(function (k) {
       if (k >= WINDOW_START && k <= WINDOW_END && isWorkday(k)) n++;
     });
     return n;
@@ -334,7 +357,7 @@
       dom.todaySub.textContent = '统考就在这一周，按老师划的范围过一遍。';
     } else if (status.kind === 'military') {
       dom.todayKicker.textContent = '第 ' + status.week + ' 周 · 星期' + WEEKDAY_CN[wd] + ' · 军训';
-      dom.todaySub.innerHTML = '军训期间只保晨读，距考试还有 <b>' + toExam + '</b> 天';
+      dom.todaySub.innerHTML = '军训期间只保每天 30 分钟，距考试还有 <b>' + toExam + '</b> 天';
     } else {
       dom.todayKicker.textContent = '第 ' + status.week + ' 周 · 星期' + WEEKDAY_CN[wd];
       dom.todaySub.innerHTML = '距第 19 周考试还有 <b>' + toExam + '</b> 天';
@@ -372,8 +395,59 @@
     list.forEach(function (c) {
       var li = el('li', 'course-item');
       li.appendChild(el('span', 'course-slot', c[0]));
-      li.appendChild(el('span', 'course-name', c[1]));
+      var name = el('span', 'course-name');
+      name.appendChild(el('span', 'course-title', c[1]));
+      if (c[2]) name.appendChild(el('span', 'course-room', c[2]));
+      li.appendChild(name);
       dom.courseList.appendChild(li);
+    });
+  }
+
+  /* ------------------------------------------------------------------ *
+   * 课表
+   * ------------------------------------------------------------------ */
+  function renderTimetable() {
+    var today = todayKey();
+    var todayWd = weekdayOf(today);
+    var highlight = today >= TERM_START && today <= EXAM_END;
+
+    dom.timetableMeta.textContent = '按第 3 周教务系统';
+    dom.timetable.textContent = '';
+
+    [1, 2, 3, 4, 5, 6, 0].forEach(function (wd) {
+      var list = COURSES[wd] || [];
+      var isToday = highlight && wd === todayWd;
+      var day = el('div', 'tt-day' + (isToday ? ' is-today' : ''));
+
+      var head = el('div', 'tt-day-head');
+      head.appendChild(el('span', 'tt-day-name', wd === 0 ? '周日' : '周' + WEEKDAY_CN[wd]));
+      if (isToday) head.appendChild(el('span', 'tt-day-tag', '今天'));
+      day.appendChild(head);
+
+      if (!list.length) {
+        day.appendChild(el('p', 'tt-day-rest', '没课'));
+      } else {
+        var ul = el('ul', 'course-list');
+        list.forEach(function (c) {
+          var li = el('li', 'course-item');
+          li.appendChild(el('span', 'course-slot', c[0]));
+          var name = el('span', 'course-name');
+          name.appendChild(el('span', 'course-title', c[1]));
+          if (c[2]) name.appendChild(el('span', 'course-room', c[2]));
+          li.appendChild(name);
+          ul.appendChild(li);
+        });
+        day.appendChild(ul);
+      }
+      dom.timetable.appendChild(day);
+    });
+
+    dom.periodTimes.textContent = '';
+    PERIOD_TIMES.forEach(function (p) {
+      var li = el('li', 'period-item');
+      li.appendChild(el('span', 'period-label', p[0]));
+      li.appendChild(el('span', null, p[1]));
+      dom.periodTimes.appendChild(li);
     });
   }
 
@@ -382,7 +456,7 @@
     var plan = WEEK_PLAN[wd];
     var text = plan ? plan.task : '';
     if (status.kind === 'before') text = '把激活码注册好；把 48 个音标过一遍';
-    else if (status.kind === 'military') text = '只保晨读；晚上早点睡，别安排新任务';
+    else if (status.kind === 'military') text = '只完成英语 30 分钟；晚上早点睡，别安排新任务';
     else if (status.kind === 'exam') text = '按老师划的范围复习；做一次限时上机模拟';
     else if (status.kind === 'after') text = '这一页留到下学期再用';
 
@@ -408,7 +482,7 @@
       dom.todayMorningBtn.classList.add('locked');
       dom.todayMorningBtn.disabled = true;
       dom.todayMorningBtn.setAttribute('aria-pressed', 'false');
-      dom.todayMorningBtnText.textContent = k < WINDOW_START ? '打卡从 9 月 14 日开始' : '晨读打卡已经结束';
+      dom.todayMorningBtnText.textContent = k < WINDOW_START ? '打卡从 9 月 14 日开始' : '本学期的打卡已经结束';
       dom.todayMorningNote.textContent = k < WINDOW_START
         ? '正式上课后，每个工作日读完 30 分钟就在这里打勾。'
         : '第 19 周结束后不再累计。';
@@ -419,7 +493,7 @@
       dom.todayMorningBtn.disabled = true;
       dom.todayMorningBtn.setAttribute('aria-pressed', 'false');
       dom.todayMorningBtnText.textContent = '周末不用打卡';
-      dom.todayMorningNote.textContent = '晨读窗口是每周一到周五。想读就读，不计入统计。';
+      dom.todayMorningNote.textContent = '打卡按工作日算，周末想学也可以，只是不计入统计。';
       return;
     }
 
@@ -429,7 +503,7 @@
       dom.todayMorningBtn.classList.add('on');
       dom.todayMorningBtnText.textContent = '今天已打卡，点一下取消';
     } else {
-      dom.todayMorningBtnText.textContent = '完成今天的晨读';
+      dom.todayMorningBtnText.textContent = '完成今天的 30 分钟';
     }
     dom.todayMorningNote.textContent = '打卡窗口：第 3 周到第 19 周的每个工作日。';
   }
@@ -553,9 +627,9 @@
     var streak = streakWorkdays();
 
     dom.morningStats.textContent = '';
-    addStat(dom.morningStats, '晨读完成率', rate + '%', checked + ' / ' + expected + ' 天', rate >= 60, true);
-    addStat(dom.morningStats, '连续晨读', String(streak), '个工作日', streak > 0);
-    addStat(dom.morningStats, '本周晨读', String(weekCheckedCount(week)), '/ 5 天', false);
+    addStat(dom.morningStats, '打卡完成率', rate + '%', checked + ' / ' + expected + ' 天', rate >= 60, true);
+    addStat(dom.morningStats, '连续打卡', String(streak), '个工作日', streak > 0);
+    addStat(dom.morningStats, '本周打卡', String(weekCheckedCount(week)), '/ 5 天', false);
     addStat(dom.morningStats, '单元进度', String(unitDoneCount()), '/ 40 项', false);
     var examText = toExam > 0 ? String(toExam) : '—';
     var examUnit = toExam > 0 ? '天' : '考试周已经开始';
@@ -599,7 +673,7 @@
   }
 
   function exportBackup() {
-    dom.backupText.value = JSON.stringify({ v: 1, morning: data.morning, units: data.units });
+    dom.backupText.value = JSON.stringify({ v: 1, daily: data.daily, units: data.units });
     dom.backupText.select();
     showBackupHint('已生成备份文本，点“复制”或长按全选。', false);
   }
@@ -615,16 +689,16 @@
       return;
     }
     var next = sanitize(parsed);
-    var days = Object.keys(next.morning).length;
+    var days = Object.keys(next.daily).length;
     if (!days && !Object.keys(next.units).length) {
       showBackupHint('这段备份里没有找到打卡记录。', true);
       return;
     }
-    data.morning = next.morning;
+    data.daily = next.daily;
     data.units = next.units;
     saveData();
     renderAll();
-    showBackupHint('已导入 ' + days + ' 天晨读记录。', false);
+    showBackupHint('已导入 ' + days + ' 天打卡记录。', false);
   }
 
   function copyBackup() {
@@ -656,7 +730,7 @@
    * ------------------------------------------------------------------ */
   function showView(view) {
     currentView = view;
-    ['today', 'checkin', 'plan', 'stats'].forEach(function (v) { dom.views[v].hidden = v !== view; });
+    ['today', 'timetable', 'checkin', 'plan', 'stats'].forEach(function (v) { dom.views[v].hidden = v !== view; });
     Array.prototype.forEach.call(dom.switch.querySelectorAll('.seg-btn'), function (b) {
       var active = b.dataset.view === view;
       b.classList.toggle('active', active);
@@ -678,6 +752,7 @@
 
   function renderAll() {
     renderToday();
+    renderTimetable();
     renderCheckin();
     renderPlan();
     renderStats();
