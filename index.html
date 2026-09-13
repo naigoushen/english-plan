@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0A101E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="英语计划">
+<title>大一上学期英语学习计划</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>英语计划</span></div>
+    <button type="button" class="text-btn" id="backupOpen">备份</button>
+  </header>
+
+  <nav class="segmented" id="viewSwitch" role="tablist" aria-label="视图切换">
+    <button type="button" class="seg-btn active" data-view="today" role="tab" aria-selected="true">今日</button>
+    <button type="button" class="seg-btn" data-view="checkin" role="tab" aria-selected="false">打卡</button>
+    <button type="button" class="seg-btn" data-view="plan" role="tab" aria-selected="false">计划</button>
+    <button type="button" class="seg-btn" data-view="stats" role="tab" aria-selected="false">统计</button>
+  </nav>
+
+  <main id="viewToday" class="view">
+    <section class="hero">
+      <p class="hero-kicker" id="todayKicker"></p>
+      <h1 class="date-title" id="todayTitle"></h1>
+      <p class="hero-sub" id="todaySub"></p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">今天的课</h2>
+        <span class="panel-meta" id="courseMeta"></span>
+      </div>
+      <ul class="course-list" id="courseList"></ul>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">今天做这些</h2>
+      </div>
+      <ul class="task-list" id="taskList"></ul>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">晨读打卡</h2>
+        <span class="panel-meta" id="todayMorningMeta"></span>
+      </div>
+      <button type="button" class="cta" id="todayMorningBtn" aria-pressed="false">
+        <span class="cta-mark" aria-hidden="true"></span>
+        <span class="cta-text" id="todayMorningBtnText">完成今天的晨读</span>
+      </button>
+      <div class="progress"><div class="progress-fill" id="todayWeekFill"></div></div>
+      <p class="note" id="todayMorningNote"></p>
+    </section>
+  </main>
+
+  <main id="viewCheckin" class="view" hidden>
+    <section class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">晨读打卡</h2>
+        <div class="mini-switch" id="gridMode" role="group" aria-label="打卡范围">
+          <button type="button" class="mini-btn on" data-mode="week">本周</button>
+          <button type="button" class="mini-btn" data-mode="all">全部</button>
+        </div>
+      </div>
+
+      <div class="week-nav" id="weekNav">
+        <button type="button" class="nav-arrow" id="weekPrev" aria-label="上一周">‹</button>
+        <span class="week-label" id="weekLabel"></span>
+        <button type="button" class="nav-arrow" id="weekNext" aria-label="下一周">›</button>
+      </div>
+
+      <div class="grid-scroll">
+        <div id="morningGrid"></div>
+      </div>
+      <p class="note">轻点格子就能打卡或取消，过去的工作日可以补打。</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">单元进度</h2>
+        <span class="panel-meta" id="unitMeta"></span>
+      </div>
+      <ul class="unit-list" id="unitList"></ul>
+      <p class="note">综合教程与视听说各自推进，不必同步。轻点标签切换完成状态。</p>
+    </section>
+  </main>
+
+  <main id="viewPlan" class="view" hidden>
+    <section class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">学期时间轴</h2>
+        <span class="panel-meta" id="timelineMeta"></span>
+      </div>
+      <ol class="timeline" id="timeline"></ol>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2 class="panel-title">三条纪律</h2></div>
+      <ol class="rule-list" id="ruleList"></ol>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2 class="panel-title">现在就能做的三件事</h2></div>
+      <ol class="rule-list" id="todoList"></ol>
+    </section>
+  </main>
+
+  <main id="viewStats" class="view" hidden>
+    <section class="panel">
+      <div class="panel-head"><h2 class="panel-title">晨读</h2></div>
+      <div class="stat-grid" id="morningStats"></div>
+      <div class="progress"><div class="progress-fill" id="statsMorningFill"></div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2 class="panel-title">单元</h2></div>
+      <div class="stat-grid" id="unitStats"></div>
+      <div class="progress"><div class="progress-fill" id="statsUnitFill"></div></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>记录保存在本机浏览器中</span>
+    <button type="button" class="text-btn" id="backupOpenFoot">备份与恢复</button>
+  </footer>
+</div>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-backdrop" id="sheetBackdrop"></div>
+  <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet-head">
+      <h2 class="panel-title" id="sheetTitle">备份与恢复</h2>
+      <button type="button" class="text-btn" id="sheetClose">关闭</button>
+    </div>
+    <p class="note">记录只保存在这台设备上。换设备或换浏览器时，用下面这段文本搬运。</p>
+    <label class="field-label" for="backupText">备份文本</label>
+    <textarea id="backupText" rows="6" spellcheck="false" placeholder="点“导出”会在这里生成一段文本；也可以粘贴另一台设备导出的文本，再点“导入”。"></textarea>
+    <div class="btn-row">
+      <button type="button" class="btn btn-primary" id="exportBtn">导出</button>
+      <button type="button" class="btn btn-ghost" id="importBtn">导入</button>
+      <button type="button" class="btn btn-ghost" id="copyBtn">复制</button>
+    </div>
+    <p class="hint" id="backupHint" role="status" hidden></p>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
