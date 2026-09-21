@@ -51,8 +51,8 @@
   ];
 
   var WEEK_PLAN = {
-    1: { classes: '上午全空，下午第 5-6 节有大学外语课', task: '英语 30 分钟；上午整块时间精读课文；晚上清当天内容' },
-    2: { classes: 'Python 四节 + 高等数学四节', task: '只完成英语 30 分钟' },
+    1: { classes: '上午全空，下午英语课与形势与政策', task: '英语 30 分钟；上午整块时间精读课文；晚上清当天内容' },
+    2: { classes: 'Python 四节 + 高等数学四节 + 晚上心理素质训练', task: '只完成英语 30 分钟' },
     3: { classes: '上午电工电子与口语课，晚上还有两节大学外语', task: '英语 30 分钟；下午空档练视听说听力；晚上英语课当天清' },
     4: { classes: '艺术学概论三节 + 思政两节 + 体育两节', task: '英语 30 分钟；晚上背单词' },
     5: { classes: '思政、电工电子、高等数学共八节', task: '只完成英语 30 分钟' },
@@ -84,6 +84,21 @@
     6: [],
     0: []
   };
+
+  // 第 4 周起新增的课（按周生效）
+  var EXTRA_COURSES = [
+    { fromWeek: 4, day: 1, course: [7, 8, '形势与政策I（形策I-06）', '1-0101', 0.3] },
+    { fromWeek: 4, day: 2, course: [9, 10, '大学生团体心理素质训练I', '5-0605', 1] }
+  ];
+
+  function coursesFor(wd, week) {
+    var list = (COURSES[wd] || []).slice();
+    EXTRA_COURSES.forEach(function (e) {
+      if (e.day === wd && week >= e.fromWeek) list.push(e.course);
+    });
+    list.sort(function (a, b) { return a[0] - b[0]; });
+    return list;
+  }
 
   // 每个小节的起止时间，来自学校作息时间表（第 4 节按第一、第五教学楼计）
   var PERIOD_RANGE = [
@@ -416,7 +431,7 @@
       return;
     }
 
-    var list = COURSES[wd] || [];
+    var list = coursesFor(wd, weekOf(k));
     dom.courseMeta.textContent = note ? note.text : '';
     if (!list.length) {
       dom.courseList.appendChild(el('li', 'empty-line', note ? note.text : '今天没有课。'));
@@ -493,7 +508,7 @@
 
     [1, 2, 3, 4, 5, 6, 0].forEach(function (wd) {
       var dateKey = addDays(monday, wd === 0 ? 6 : wd - 1);
-      var list = COURSES[wd] || [];
+      var list = coursesFor(wd, ttWeek);
       var isToday = isCurrent && dateKey === todayKey();
       var day = el('div', 'tt-day' + (isToday ? ' is-today' : ''));
 
