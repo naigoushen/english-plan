@@ -153,7 +153,7 @@
   ];
 
   var HOLIDAYS = [
-    { from: '2026-10-01', to: '2026-10-07', text: '国庆假期，具体安排以学校通知为准' }
+    { from: '2026-10-01', to: '2026-10-04', text: '国庆假期，具体安排以学校通知为准' }
   ];
 
   var DAY_NOTES = {
@@ -852,7 +852,7 @@
       note = el('p', 'foot-note');
       dom.foot.appendChild(note);
     }
-    var parts = ['课表按第 3 周教务系统导出，如有调整以最新通知为准。'];
+    var parts = ['课表按教务系统导出，第 6 周为放假调课周。如有调整以最新通知为准。'];
     if (!storageOK) parts.push('当前浏览器不允许本地存储，这次的记录不会保存。');
     note.textContent = parts.join(' ');
   }
