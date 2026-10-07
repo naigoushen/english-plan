@@ -91,7 +91,30 @@
     { fromWeek: 4, day: 2, course: [9, 10, '大学生团体心理素质训练I', '5-0605', 1] }
   ];
 
+  // 放假调课周：整周替换，键是周次。只写和常规周不同的周。
+  var WEEK_OVERRIDES = {
+    6: {
+      1: [[5, 6, '大学外语I(英B)', '2216', 3]],
+      2: [[5, 8, '高等数学I(A)', '5-0308', 5], [9, 10, '大学生团体心理素质训练I', '5-0605', 1]],
+      3: [[3, 4, '大学外语口语I(英)', '4102', 2], [9, 10, '大学外语I(英B)', '2216', 3]],
+      4: [
+        [1, 3, '艺术导论', '4313', 2],
+        [5, 6, '思想道德与法治（德法28）', '5-0506', 3],
+        [7, 8, '体育I（四78）', '图书馆旁篮球场', 2]
+      ],
+      5: [
+        [1, 2, '思想道德与法治（德法28）', '5-0506', 3],
+        [3, 4, '电工电子技术基础', '3307 通用计算机实训室', 3],
+        [5, 8, '高等数学I(A)', '5-0308', 5]
+      ],
+      6: [],
+      0: [[7, 8, '体育I（四78）', '图书馆旁篮球场', 2]]
+    }
+  };
+
   function coursesFor(wd, week) {
+    var override = WEEK_OVERRIDES[week];
+    if (override) return (override[wd] || []).slice();
     var list = (COURSES[wd] || []).slice();
     EXTRA_COURSES.forEach(function (e) {
       if (e.day === wd && week >= e.fromWeek) list.push(e.course);
@@ -504,6 +527,10 @@
       dom.timetable.appendChild(el('p', 'tt-week-note', notice));
       renderPeriodTimes();
       return;
+    }
+
+    if (WEEK_OVERRIDES[ttWeek]) {
+      dom.timetable.appendChild(el('p', 'tt-week-note', '这一周是放假调课周，课表和常规周不同。'));
     }
 
     [1, 2, 3, 4, 5, 6, 0].forEach(function (wd) {
