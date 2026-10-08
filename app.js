@@ -107,8 +107,8 @@
         [3, 4, '电工电子技术基础', '3307 通用计算机实训室', 3],
         [5, 8, '高等数学I(A)', '5-0308', 5]
       ],
-      6: [],
-      0: [[7, 8, '体育I（四78）', '图书馆旁篮球场', 2]]
+      6: [[3, 4, '大学外语口语I(英)', '4102', 2], [9, 10, '大学外语I(英B)', '2216', 3]],
+      0: [[7, 8, '体育I（四78）', '图书馆旁篮球场', 2, '16:00 - 17:30']]
     }
   };
 
@@ -467,15 +467,16 @@
     return from === to ? '第 ' + from + ' 节' : '第 ' + from + '-' + to + ' 节';
   }
 
-  function slotTime(from, to) {
-    return PERIOD_RANGE[from - 1][0] + ' - ' + PERIOD_RANGE[to - 1][1];
+  function slotTime(c) {
+    if (c[5]) return c[5];
+    return PERIOD_RANGE[c[0] - 1][0] + ' - ' + PERIOD_RANGE[c[1] - 1][1];
   }
 
   function courseItem(c) {
     var li = el('li', 'course-item');
     var slot = el('span', 'course-slot');
     slot.appendChild(el('span', 'course-slot-label', slotLabel(c[0], c[1])));
-    slot.appendChild(el('span', 'course-time', slotTime(c[0], c[1])));
+    slot.appendChild(el('span', 'course-time', slotTime(c)));
     li.appendChild(slot);
     var name = el('span', 'course-name');
     name.appendChild(el('span', 'course-title', c[2]));
