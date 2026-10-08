@@ -112,6 +112,13 @@
     }
   };
 
+  // 指定周次的加课：在常规课表上叠加，原有课程一律保留
+  var WEEK_ADDITIONS = {
+    10: { 3: [[5, 6, '思想道德与法治（德法28）', '2211', 3]] },
+    11: { 3: [[5, 6, '思想道德与法治（德法28）', '2211', 3]] },
+    13: { 3: [[5, 6, '思想道德与法治（德法28）', '2211', 3]] }
+  };
+
   function coursesFor(wd, week) {
     var override = WEEK_OVERRIDES[week];
     if (override) return (override[wd] || []).slice();
@@ -119,6 +126,8 @@
     EXTRA_COURSES.forEach(function (e) {
       if (e.day === wd && week >= e.fromWeek) list.push(e.course);
     });
+    var add = WEEK_ADDITIONS[week];
+    if (add && add[wd]) add[wd].forEach(function (c) { list.push(c); });
     list.sort(function (a, b) { return a[0] - b[0]; });
     return list;
   }
