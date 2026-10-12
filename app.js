@@ -87,7 +87,8 @@
 
   // 第 4 周起新增的课（按周生效）
   var EXTRA_COURSES = [
-    { fromWeek: 4, day: 2, course: [9, 10, '大学生团体心理素质训练I', '5-0605', 1] }
+    { fromWeek: 4, day: 2, course: [9, 10, '大学生团体心理素质训练I', '5-0605', 1] },
+    { fromWeek: 7, toWeek: 14, day: 1, course: [9, 10, '晚自习', '5611', 0] }
   ];
 
   // 放假调课周：整周替换，键是周次。只写和常规周不同的周。
@@ -124,7 +125,10 @@
     if (override) return (override[wd] || []).slice();
     var list = (COURSES[wd] || []).slice();
     EXTRA_COURSES.forEach(function (e) {
-      if (e.day === wd && week >= e.fromWeek) list.push(e.course);
+      if (e.day !== wd) return;
+      if (week < e.fromWeek) return;
+      if (e.toWeek && week > e.toWeek) return;
+      list.push(e.course);
     });
     var add = WEEK_ADDITIONS[week];
     if (add && add[wd]) add[wd].forEach(function (c) { list.push(c); });
